@@ -40,7 +40,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import BookAppointment from "./pages/BookAppointment";
 import Prescription from "./pages/Prescription";
 import Register from "./pages/Register";
-import Profile from "./pages/profile";
+import Profile from "./pages/Profile";
 
 
 export default function App() {
