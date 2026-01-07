@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import logo from "../assets/logo.jpg"; // your background image
+import logo from "../assets/logo.jpg"; // background image
 
 export default function Home() {
   return (
@@ -12,6 +12,10 @@ export default function Home() {
         <Link to="/" style={navLink}>Home</Link>
         <Link to="/about" style={navLink}>About</Link>
         <Link to="/contact" style={navLink}>Contact</Link>
+
+        {/* ✅ Profile link styled */}
+        <Link to="/profile" style={navLink}>Profile</Link> 
+
         <Link to="/login" style={loginBtn}>Login</Link>
       </nav>
 
@@ -21,6 +25,8 @@ export default function Home() {
         <p style={desc}>
           Your health is our priority. Book appointments, consult our doctors, and get healthcare support easily.
         </p>
+
+        {/* ✅ Book Appointment */}
         <Link to="/book" style={ctaBtn}>Book Appointment</Link>
       </div>
     </div>
@@ -45,7 +51,7 @@ const overlay = {
   inset: 0,
   background: "linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4))",
   zIndex: 1,
-  pointerEvents: "none", // ✅ important: allows clicks on navbar
+  pointerEvents: "none", // allow clicks
 };
 
 const navbar = {
@@ -54,7 +60,7 @@ const navbar = {
   right: "40px",
   display: "flex",
   gap: "20px",
-  zIndex: 10, // above overlay
+  zIndex: 10,
 };
 
 const navLink = {
@@ -62,7 +68,7 @@ const navLink = {
   textDecoration: "none",
   fontWeight: "bold",
   padding: "8px 12px",
-  borderRadius: "5px",
+  borderRadius: "6px",
   transition: "all 0.3s",
 };
 

@@ -1,74 +1,120 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function Profile() {
-  const [name, setName] = useState("");
-  const [phone, setPhone] = useState("");
-  const [age, setAge] = useState("");
-  const [bloodGroup, setBloodGroup] = useState("");
+  const navigate = useNavigate();
+
+  const [profile, setProfile] = useState({
+    patientName: "",
+    age: "",
+    phone: "",
+    bloodGroup: "",
+  });
+
+  // 🔥 KEY FIX — clear old profile on page load
+  useEffect(() => {
+    localStorage.removeItem("patientProfile");
+  }, []);
 
   const saveProfile = () => {
-    if (!name || !phone || !age || !bloodGroup) {
-      alert("Please fill all fields");
+    const { patientName, age, phone, bloodGroup } = profile;
+
+    if (!patientName || !age || !phone || !bloodGroup) {
+      alert("❌ Fill all details");
       return;
     }
 
-    const patientProfile = {
-      id: Date.now(),
-      name,
-      phone,
-      age,
-      bloodGroup,
-    };
-
-    localStorage.setItem("patientProfile", JSON.stringify(patientProfile));
-    alert("Profile saved ✅");
+    localStorage.setItem("patientProfile", JSON.stringify(profile));
+    alert("✅ Profile Saved");
+    navigate("/book");
   };
 
   return (
-    <div style={{ padding: "40px" }}>
-      <h2>Patient Profile</h2>
+    <div style={container}>
+      <div style={card}>
+        <h2>Patient Profile</h2>
 
-      <div style={{ marginBottom: "15px" }}>
-        <label>Name:</label>
         <input
-          type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          placeholder="Enter Name"
+          style={input}
+          placeholder="Full Name"
+          value={profile.patientName}
+          onChange={(e) =>
+            setProfile({ ...profile, patientName: e.target.value })
+          }
         />
-      </div>
 
-      <div style={{ marginBottom: "15px" }}>
-        <label>Phone:</label>
         <input
-          type="text"
-          value={phone}
-          onChange={(e) => setPhone(e.target.value)}
-          placeholder="Enter Phone"
-        />
-      </div>
-
-      <div style={{ marginBottom: "15px" }}>
-        <label>Age:</label>
-        <input
+          style={input}
           type="number"
-          value={age}
-          onChange={(e) => setAge(e.target.value)}
-          placeholder="Enter Age"
+          placeholder="Age"
+          value={profile.age}
+          onChange={(e) =>
+            setProfile({ ...profile, age: e.target.value })
+          }
         />
-      </div>
 
-      <div style={{ marginBottom: "15px" }}>
-        <label>Blood Group:</label>
         <input
-          type="text"
-          value={bloodGroup}
-          onChange={(e) => setBloodGroup(e.target.value)}
-          placeholder="Enter Blood Group"
+          style={input}
+          placeholder="Phone"
+          value={profile.phone}
+          onChange={(e) =>
+            setProfile({ ...profile, phone: e.target.value })
+          }
         />
-      </div>
 
-      <button onClick={saveProfile}>Save Profile</button>
+        <select
+          style={input}
+          value={profile.bloodGroup}
+          onChange={(e) =>
+            setProfile({ ...profile, bloodGroup: e.target.value })
+          }
+        >
+          <option value="">Blood Group</option>
+          <option>O+</option><option>O-</option>
+          <option>A+</option><option>A-</option>
+          <option>B+</option><option>B-</option>
+          <option>AB+</option><option>AB-</option>
+        </select>
+
+        <button style={btn} onClick={saveProfile}>
+          Save Profile
+        </button>
+      </div>
     </div>
   );
 }
+
+/* ===== CSS ===== */
+
+const container = {
+  minHeight: "100vh",
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  background: "#f3f4f6",
+};
+
+const card = {
+  background: "#fff",
+  padding: "30px",
+  width: "350px",
+  borderRadius: "15px",
+  boxShadow: "0 10px 25px rgba(0,0,0,.15)",
+};
+
+const input = {
+  width: "100%",
+  padding: "12px",
+  marginBottom: "12px",
+  borderRadius: "8px",
+  border: "1px solid #c7d2fe",
+};
+
+const btn = {
+  width: "100%",
+  padding: "12px",
+  background: "linear-gradient(135deg,#6366f1,#9333ea)",
+  color: "#fff",
+  border: "none",
+  borderRadius: "10px",
+};

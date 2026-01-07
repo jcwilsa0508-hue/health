@@ -13,20 +13,21 @@ export default function Prescription() {
   const [medicines, setMedicines] = useState("");
   const [dosage, setDosage] = useState("");
 
-  // Load appointments
+  // 🔹 Load appointments
   useEffect(() => {
     const storedAppointments =
       JSON.parse(localStorage.getItem("appointments")) || [];
     setAppointments(storedAppointments);
   }, []);
 
-  // Auto-select token if passed from DoctorDashboard
+  // 🔹 Auto-select token if passed
   useEffect(() => {
     if (passedToken) {
       setSelectedToken(passedToken);
     }
   }, [passedToken]);
 
+  // 🔥 Save Prescription (LOGIC SAME)
   const savePrescription = () => {
     if (!selectedToken || !medicines || !dosage) {
       alert("❌ Token, Medicines & Dosage required");
@@ -38,11 +39,11 @@ export default function Prescription() {
     );
 
     if (!selectedAppointment) {
-      alert("Invalid token");
+      alert("❌ Invalid token");
       return;
     }
 
-    // 🔥 STEP 6: include full patient details
+    // ✅ Full patient + appointment details
     const newPrescription = {
       token: selectedToken,
       patientName: selectedAppointment.patientName,
@@ -50,34 +51,38 @@ export default function Prescription() {
       bloodGroup: selectedAppointment.bloodGroup,
       phone: selectedAppointment.phone,
       doctor: selectedAppointment.doctor,
-      date: new Date().toLocaleDateString(),
+      appointmentDate: selectedAppointment.date,
+      prescriptionDate: new Date().toLocaleDateString(),
       medicines,
       dosage,
     };
 
-    // Save as array (token-wise)
     const existing =
       JSON.parse(localStorage.getItem("prescriptions")) || [];
 
     existing.push(newPrescription);
-
     localStorage.setItem("prescriptions", JSON.stringify(existing));
 
     alert("✅ Prescription saved for Token " + selectedToken);
     navigate("/doctor");
   };
 
+  // 🔹 Selected patient preview (NEW – display only)
+  const selectedPatient = appointments.find(
+    (a) => String(a.token) === String(selectedToken)
+  );
+
   return (
     <div style={page}>
       <div style={card}>
         <h2>📝 Create Prescription</h2>
 
-        {/* TOKEN AUTO-SELECT */}
+        {/* TOKEN SELECT */}
         <label>Patient Token</label>
         <select
           style={input}
           value={selectedToken}
-          disabled={!!passedToken} // 🔒 lock if token came from doctor click
+          disabled={!!passedToken}
           onChange={(e) => setSelectedToken(e.target.value)}
         >
           <option value="">-- Select Token --</option>
@@ -87,6 +92,17 @@ export default function Prescription() {
             </option>
           ))}
         </select>
+
+        {/* 🔥 PATIENT INFO PREVIEW */}
+        {selectedPatient && (
+          <div style={patientCard}>
+            <p><b>Name:</b> {selectedPatient.patientName}</p>
+            <p><b>Age:</b> {selectedPatient.age}</p>
+            <p><b>Blood Group:</b> {selectedPatient.bloodGroup}</p>
+            <p><b>Phone:</b> {selectedPatient.phone}</p>
+            <p><b>Doctor:</b> {selectedPatient.doctor}</p>
+          </div>
+        )}
 
         <label>Medicines</label>
         <textarea
@@ -126,6 +142,14 @@ const card = {
   width: "420px",
   borderRadius: "16px",
   boxShadow: "0 15px 35px rgba(0,0,0,0.15)",
+};
+
+const patientCard = {
+  background: "#f1f5f9",
+  padding: "12px",
+  borderRadius: "10px",
+  marginBottom: "15px",
+  fontSize: "14px",
 };
 
 const input = {
